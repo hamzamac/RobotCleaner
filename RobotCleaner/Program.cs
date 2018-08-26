@@ -22,7 +22,7 @@ namespace RobotCleaner
             int.TryParse(coordinates[0], out xCoordinate);
             int.TryParse(coordinates[1], out yCoordinate);
 
-            //Third Input: the commands
+            //Third Input: the cleaning commands
             (string direction, int steps) GetCommand()
             {
                 string direction;
@@ -36,7 +36,7 @@ namespace RobotCleaner
             }
 
             //collect all input commands to be executed by the robot
-            List<(string direction, int steps)> commands = new List<(string direction, int steps)>();
+            var commands = new List<(string direction, int steps)>();
 
             for (int i = 0; i < numberOfCommands; i++)
             {
@@ -46,7 +46,7 @@ namespace RobotCleaner
 
             /*****  ROBOT CLEANING OPERATION    *****/
 
-            HashSet<(int x, int y)> uniquePlaces = new HashSet<(int x, int y)>();
+            var uniquePlaces = new HashSet<(int x, int y)>();
 
             uniquePlaces.Add((xCoordinate, yCoordinate));
 
