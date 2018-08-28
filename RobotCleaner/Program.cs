@@ -36,88 +36,93 @@ namespace RobotCleaner
             }
 
             //collect all input commands to be executed by the robot
-            var commands = new List<(string direction, int steps)>();
+            //var commands = new List<(string direction, int steps)>();
+            var uniquePlaces = new HashSet<(int x, int y)>();
 
             for (int i = 0; i < numberOfCommands; i++)
             {
-                commands.Add(GetCommand());
+                uniquePlaces.Add((xCoordinate, yCoordinate));
+
+                MoveAndClean(GetCommand());
             }
 
 
             /*****  ROBOT CLEANING OPERATION    *****/
 
-            var uniquePlaces = new HashSet<(int x, int y)>();
-
-            uniquePlaces.Add((xCoordinate, yCoordinate));
-
-            foreach (var command in commands)
+            void MoveAndClean((string direction, int steps) command)
             {
-                switch (command.direction)
-                {
-                    case "E":
-                        {
-                            //x++
-                            int x = xCoordinate;
-                            int stopPlace = xCoordinate + command.steps;
-
-                            for (; x <= 100_000 && x <= stopPlace; x++)
+                //foreach (var command in commands)
+                //{
+                    switch (command.direction)
+                    {
+                        case "E":
                             {
-                                uniquePlaces.Add((x, yCoordinate));
+                                //x++
+                                int x = xCoordinate;
+                                int stopPlace = xCoordinate + command.steps;
+
+                                for (; x <= 100_000 && x <= stopPlace; x++)
+                                {
+                                    uniquePlaces.Add((x, yCoordinate));
+                                }
+                                //update the current coordinates on the robot
+                                xCoordinate = x - 1;
+                                break;
                             }
-                            //update the current coordinates on the robot
-                            xCoordinate = x - 1;
-                            break;
-                        }
 
-                    case "W":
-                        {
-                            //x--
-                            int x = xCoordinate;
-                            int stopPlace = xCoordinate - command.steps;
-
-                            for (; x >= -100_000 && x >= stopPlace; x--)
+                        case "W":
                             {
-                                uniquePlaces.Add((x, yCoordinate));
+                                //x--
+                                int x = xCoordinate;
+                                int stopPlace = xCoordinate - command.steps;
+
+                                for (; x >= -100_000 && x >= stopPlace; x--)
+                                {
+                                    uniquePlaces.Add((x, yCoordinate));
+                                }
+                                //update the current coordinates on the robot
+                                xCoordinate = x + 1;
+                                break;
                             }
-                            //update the current coordinates on the robot
-                            xCoordinate = x + 1;
-                            break;
-                        }
 
-                    case "N":
-                        {
-                            //y++
-                            int y = yCoordinate;
-                            int stopPlace = yCoordinate + command.steps;
-
-                            for (; y <= 100_000 && y <= stopPlace; y++)
+                        case "N":
                             {
-                                uniquePlaces.Add((xCoordinate, y));
+                                //y++
+                                int y = yCoordinate;
+                                int stopPlace = yCoordinate + command.steps;
+
+                                for (; y <= 100_000 && y <= stopPlace; y++)
+                                {
+                                    uniquePlaces.Add((xCoordinate, y));
+                                }
+                                //update the current coordinates on the 
+                                yCoordinate = y - 1;
+                                break;
                             }
-                            //update the current coordinates on the 
-                            yCoordinate = y - 1;
-                            break;
-                        }
 
-                    case "S":
-                        {
-                            //y--
-                            int y = yCoordinate;
-                            int stopPlace = yCoordinate - command.steps;
-
-                            for (; y >= -100_000 && y >= stopPlace; y--)
+                        case "S":
                             {
-                                uniquePlaces.Add((xCoordinate, y));
-                            }
-                            //update the current coordinates on the robot
-                            yCoordinate = y + 1;
-                            break;
-                        }
+                                //y--
+                                int y = yCoordinate;
+                                int stopPlace = yCoordinate - command.steps;
 
-                    default:
-                        break;
-                }
+                                for (; y >= -100_000 && y >= stopPlace; y--)
+                                {
+                                    uniquePlaces.Add((xCoordinate, y));
+                                }
+                                //update the current coordinates on the robot
+                                yCoordinate = y + 1;
+                                break;
+                            }
+
+                        default:
+                            break;
+                    }
+                //}
             }
+
+
+            
 
 
             /*****  ROBOT CLEANING REPORT    *****/
